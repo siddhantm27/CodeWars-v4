@@ -1,208 +1,49 @@
 import random
 import math
 
-name = "script"
+name = "navya"
 
 def central_pirates(pirate):
-    dimension_x = pirate.getDimensionX()
-    dimension_y = pirate.getDimensionY()
-
+    # print(pirate.getSignal())
     if pirate.getPosition() == pirate.getDeployPoint():
-        sig = "centre"
-        pirate.setSignal(sig)
-        return moveTo(dimension_x // 2, dimension_y // 2, pirate)
-
-    if pirate.getPosition() == (dimension_x // 2, dimension_y // 2):
-        x = random.randint(1, 12)
-        if x == 1:
+            sig = "centre"
+            pirate.setSignal(sig)
+            return moveTo(20, 20, pirate)
+    if pirate.getPosition() == (20, 20):
+        if random.randint(1, 4) == 1:
             pirate.setSignal("top-left")
-        elif x == 2:
+        elif random.randint(1,4)==2:
             pirate.setSignal("bottom-left")
-        elif x == 3:
+        elif random.randint(1,4)==3:
             pirate.setSignal("top-right")
-        elif x == 4:
-            pirate.setSignal("bottom-right")
-        elif x == 5:
-            pirate.setSignal("top1")
-        elif x == 6:
-            pirate.setSignal("top2")
-        elif x == 7:
-            pirate.setSignal("right1")
-        elif x == 8:
-            pirate.setSignal("right2")
-        elif x == 9:
-            pirate.setSignal("bottom1")
-        elif x == 10:
-            pirate.setSignal("bottom2")
-        elif x == 11:
-            pirate.setSignal("left1")
         else:
-            pirate.setSignal("left2")
-
+            pirate.setSignal("bottom-right")
     if pirate.getSignal() == "centre":
-        return moveTo(dimension_x // 2, dimension_y // 2, pirate)
-    elif pirate.getSignal() == "top-left": #1
-        if pirate.getPosition() == (0, 0):
+        return moveTo(20, 20, pirate)
+    if pirate.getSignal() == "top-left":
+        if pirate.getPosition()==(0,0):
             pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
+            return 2+random.randint(0,1)
         return moveTo(0, 0, pirate)
-    elif pirate.getSignal() == "bottom-right": #2
-        if pirate.getPosition() == (dimension_x - 1, dimension_y - 1):
+    if pirate.getSignal() == "bottom-right":
+        if pirate.getPosition()==(pirate.getDimensionX()-1,pirate.getDimensionY()-1):
             pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x - 1, dimension_y - 1, pirate)
-    elif pirate.getSignal() == "top-right": #3
-        if pirate.getPosition() == (dimension_x - 1, 0):
+            return 1+3*random.randint(0,1)
+        return moveTo(pirate.getDimensionX()-1,pirate.getDimensionY()-1, pirate)
+    # return roam(pirate)
+    if pirate.getSignal() == "top-right":
+        if pirate.getPosition()==(pirate.getDimensionX()-1,0):
             pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x - 1, 0, pirate)
-    elif pirate.getSignal() == "bottom-left": #4
-        if pirate.getPosition() == (0, dimension_y - 1):
+            return 3+random.randint(0,1)
+        return moveTo(39,0,pirate)
+    if pirate.getSignal() == "bottom-left":
+        if pirate.getPosition()==(1,pirate.getDimensionY()-2):
             pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, dimension_y - 1, pirate)
-    elif pirate.getSignal() == "top1": #5
-        if pirate.getPosition() == (dimension_x // 3, 0):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x // 3, 0, pirate)
-    elif pirate.getSignal() == "top2": #6
-        if pirate.getPosition() == (2*dimension_x //3, 0):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(2*dimension_x // 3, 0, pirate)
-    elif pirate.getSignal() == "right1": #7
-        if pirate.getPosition() == (dimension_x-1, dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x-1, dimension_y // 3, pirate)
-    elif pirate.getSignal() == "right2": #8
-        if pirate.getPosition() == (dimension_x-1, 2*dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x-1, 2*dimension_y // 3, pirate)
-    elif pirate.getSignal() == "bottom1": #9
-        if pirate.getPosition() == (2*dimension_x // 3, dimension_y-1):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(2*dimension_x // 3, dimension_y-1, pirate)
-    elif pirate.getSignal() == "bottom2": #10
-        if pirate.getPosition() == (dimension_x // 3, dimension_y-1):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x // 3, dimension_y-1, pirate)
-    elif pirate.getSignal() == "left1": #11
-        if pirate.getPosition() == (0, 2*dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, 2*dimension_y // 3, pirate)
-    elif pirate.getSignal() == "left2": #12
-        if pirate.getPosition() == (0, dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, dimension_y // 3, pirate)
-    else:
-        pirate.setSignal("centre")
-        return random.randint(1, 4)
-
-
-def updown(pirate):
-
-    wall_up = pirate.investigate_up()[0]
-    wall_down = pirate.investigate_down()[0]
-    wall_left = pirate.investigate_left()[0]
-    wall_right = pirate.investigate_right()[0]
-
-
-    if wall_up == "wall":
-        pirate.setSignal("down")
-    if wall_down == "wall":
-        pirate.setSignal("up")
-    if wall_left == "wall":
-        pirate.setSignal("right")
-    if wall_right == "wall":
-        pirate.setSignal("left")
-
-    if pirate.getSignal() == "up":
-        return 1
-    if pirate.getSignal() == "down":
-        return 3
-    if pirate.getSignal() == "left":
-        return 4
-    if pirate.getSignal() == "right":
-        return 2
-
-def initial_pirates(pirate,lines):
-    x = pirate.getDimensionX()
-    y = pirate.getDimensionY()
-
-    if pirate.getPosition()==pirate.getDeployPoint():
-        if pirate.getDeployPoint() == (0,0):
-            pirate.setSignal("top-left")
-        if pirate.getDeployPoint() == (pirate.getDimensionX()-1,pirate.getDimensionY()-1):
-            pirate.setSignal("bottom-right")
-        if pirate.getDeployPoint() == (pirate.getDimensionX()-1,0):
-            pirate.setSignal("top-right")
-        if pirate.getDeployPoint() == (0,pirate.getDimensionY()-1):
-            pirate.setSignal("bottom-left")
-
-    id = int(pirate.getID())
-    if pirate.getSignal()=="top-right":
-        if id<8+lines:
-            if pirate.getPosition()==(x-(id-4), 0):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-(id-4), 0, pirate)
-        else:
-            if pirate.getPosition()==(x-1, id-4-lines):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-1, id-4-lines, pirate)
-    if pirate.getSignal()=="bottom-right":
-        if id<8+lines:
-            if pirate.getPosition()==(x-(id-4), y-1):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-(id-4), y-1, pirate)
-        else:
-            if pirate.getPosition()==(x-1, y-(id-4)+lines):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-1, y-(id-4)+lines, pirate)
-    if pirate.getSignal()=="top-left":
-        if id<8+lines:
-            if pirate.getPosition()==(id-4,0):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(id-4, 0, pirate)
-        else:
-            if pirate.getPosition()==(0, id-4-lines):
-                pirate.setSignal("updown")    
-                return updown(pirate)
-            else:
-                return moveTo(0, id-4-lines, pirate)
-    if pirate.getSignal()=="bottom-left":
-        if id<8+lines:
-            if pirate.getPosition()==(id-5, y-1):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(id-5, y-1, pirate)
-        else:
-            if pirate.getPosition()==(0,y-(id-4)+lines):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(0, y-(id-4)+lines, pirate)
-    if pirate.getSignal()=="updown" or "up" or "down" or "left" or "right":
-        return updown(pirate)
-
-
+            return 1+random.randint(0,1)
+        return moveTo(1,pirate.getDimensionY()-2, pirate)
+    if pirate.getSignal()=="":
+        return random.randint(1,4)
+    
 
 def roam_island(pirate):
     L = []
@@ -564,7 +405,7 @@ def roam(pirate):
                 case _:
                     return random.randint(1, 4)
     else:
-        return central_pirates(pirate)
+        return random.randint(1, 4)
 
 
 def moveTo(x, y, Pirate):
@@ -593,130 +434,202 @@ def ActPirate(pirate):
     se = pirate.investigate_se()[0]
     x, y = pirate.getPosition()
     s = pirate.trackPlayers()
+    island_guards=5
+
     sigT = pirate.getTeamSignal()
+    island1=[]
+    island2=[]
+    island3=[]
+    if sigT!=";;":
+        ##split using pipe first
+        # adding new coordinates to island arrays
+        sigT_list=sigT.split(";")
+        if sigT_list[0] != "" and sigT_list[0] not in island1:
+            island1.append(sigT_list[0])
+        if sigT_list[1] != "" and sigT_list[1] not in island2:
+            island2.append(sigT_list[1])
+        if sigT_list[2] != "" and sigT_list[2] not in island3:
+            island3.append(sigT_list[2])
+        
+        # sending pirates to the unoccupied islands if number on island is less than reqd.
+        if int((sigT[0].split(","))[2])==island_guards:
+            if int((sigT[1].split(","))[2])==island_guards:
+                if int((sigT[2].split(","))[2])==island_guards:
+                    return central_pirates(pirate)
+                else:
+                    return moveTo( int((sigT[2].split(","))[0]) , int((sigT[2].split(","))[1]) , pirate )
+            else:
+                return moveTo( int((sigT[1].split(","))[0]) , int((sigT[1].split(","))[1]) , pirate )
+        else:
+            return moveTo( int((sigT[0].split(","))[0]) , int((sigT[0].split(","))[1]) , pirate )
 
-    if int(pirate.getID()) < 9:
-        return roam(pirate)
-    
-    lines = pirate.getDimensionY()-4
-
-    if int(pirate.getID()) < 8 + 2*lines and pirate.getCurrentFrame() < pirate.getDimensionX() * 6:
-        return initial_pirates(pirate,lines)
-    
-    # if pirate.getCurrentFrame() >= pirate.getDimensionX() * 10 and int(pirate.getID()) < 8 + lines:
-    #     return initial_pirates(pirate,lines//2)
-
-    if pirate.getCurrentFrame() >= pirate.getDimensionX() * 5:
-
-        if (
-            (curr == "island1" and s[0] != "myCaptured")
-            or (curr == "island2" and s[1] != "myCaptured")
-            or (curr == "island3" and s[2] != "myCaptured")
-        ):
-            s = curr[-1] + str(x) + "," + str(y)
-            pirate.setTeamSignal(s)
-            return roam_island(pirate)
+        
         
 
-        if (
-            (up == "island1" and s[0] != "myCaptured")
-            or (up == "island2" and s[1] != "myCaptured")
-            or (up == "island3" and s[2] != "myCaptured")
-        ):
-            s = up[-1] + str(x) + "," + str(y - 1)
-            pirate.setTeamSignal(s)
-            return 1
+    if (
+        (curr == "island1" and s[0] != "myCaptured")
+        or (curr == "island2" and s[1] != "myCaptured")
+        or (curr == "island3" and s[2] != "myCaptured")
+    ):
+        indiv_sig = sigT.split(';')
+        sigT_1 = indiv_sig[0]
+        nPirate1 = int((sigT_1.split(","))[2])
+        sigT_2 = indiv_sig[1]
+        nPirate2 = int((sigT_2.split(","))[2])
+        sigT_3 = indiv_sig[2]
+        nPirate3 = int((sigT_3.split(","))[2])
+        if curr[-1] == "1":
+            nPirate1 += 1
+            sigT_1 = str(x) + "," + str(y) + "," + str(nPirate1)
+        if curr[-1] == "2":
+            nPirate2 += 1
+            sigT_2 = str(x) + "," + str(y) + "," + str(nPirate2)
+        if curr[-1] == "3":
+            nPirate3 += 1
+            sigT_3 = str(x) + "," + str(y) + "," + str(nPirate3)
+            
+        sigT = sigT_1 + ";" + sigT_2 + ";" + sigT_3
+        pirate.setTeamSignal(sigT)
+        return roam_island(pirate)
+    
+    if int(pirate.getID()) < 9:
+        return roam(pirate)
 
-        if (
-            (down == "island1" and s[0] != "myCaptured")
-            or (down == "island2" and s[1] != "myCaptured")
-            or (down == "island3" and s[2] != "myCaptured")
-        ):
-            s = down[-1] + str(x) + "," + str(y + 1)
-            pirate.setTeamSignal(s)
-            return 3
-
-        if (
-            (left == "island1" and s[0] != "myCaptured")
-            or (left == "island2" and s[1] != "myCaptured")
-            or (left == "island3" and s[2] != "myCaptured")
-        ):
-            s = left[-1] + str(x - 1) + "," + str(y)
-            pirate.setTeamSignal(s)
-            return 4
-
-        if (
-            (right == "island1" and s[0] != "myCaptured")
-            or (right == "island2" and s[1] != "myCaptured")
-            or (right == "island3" and s[2] != "myCaptured")
-        ):
-            s = right[-1] + str(x + 1) + "," + str(y)
-            pirate.setTeamSignal(s)
-            return 2
-
-        if (
-            (nw == "island1" and s[0] != "myCaptured")
-            or (nw == "island2" and s[1] != "myCaptured")
-            or (nw == "island3" and s[2] != "myCaptured")
-        ):
-            s = nw[-1] + str(x - 1) + "," + str(y-1)
-            pirate.setTeamSignal(s)
-            return 1
-
-        if (
-            (ne == "island1" and s[0] != "myCaptured")
-            or (ne == "island2" and s[1] != "myCaptured")
-            or (ne == "island3" and s[2] != "myCaptured")
-        ):
-            s = ne[-1] + str(x + 1) + "," + str(y-1)
-            pirate.setTeamSignal(s)
-            return 1
-
-        if (
-            (sw == "island1" and s[0] != "myCaptured")
-            or (sw == "island2" and s[1] != "myCaptured")
-            or (sw == "island3" and s[2] != "myCaptured")
-        ):
-            s = sw[-1] + str(x - 1) + "," + str(y+1)
-            pirate.setTeamSignal(s)
-            return 3
-
-        if (
-            (se == "island1" and s[0] != "myCaptured")
-            or (se == "island2" and s[1] != "myCaptured")
-            or (se == "island3" and s[2] != "myCaptured")
-        ):
-            s = se[-1] + str(x + 1) + "," + str(y+1)
-            pirate.setTeamSignal(s)
-            return 3
-
-    if pirate.getTeamSignal() != "":
-        s = pirate.getTeamSignal()
-        l = s.split(",")
-        x = int(l[0][1:])
-        y = int(l[1])
-
-        if pirate.getCurrentFrame() >= 500:
-            return moveTo(x, y, pirate)
+    if (
+        (up == "island1" and s[0] != "myCaptured")
+        or (up == "island2" and s[1] != "myCaptured")
+        or (up == "island3" and s[2] != "myCaptured")
+    ):
+        s = up[-1] ##+ str(x) + "," + str(y - 1)
+        if pirate.getTeamSignal() == ";;":
+            prev_s = ""
         else:
-            return central_pirates(pirate)
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 1
+
+    if (
+        (down == "island1" and s[0] != "myCaptured")
+        or (down == "island2" and s[1] != "myCaptured")
+        or (down == "island3" and s[2] != "myCaptured")
+    ):
+        s = down[-1] ##+ str(x) + "," + str(y + 1)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 3
+
+    if (
+        (left == "island1" and s[0] != "myCaptured")
+        or (left == "island2" and s[1] != "myCaptured")
+        or (left == "island3" and s[2] != "myCaptured")
+    ):
+        s = left[-1] ##+ str(x - 1) + "," + str(y)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 4
+
+    if (
+        (right == "island1" and s[0] != "myCaptured")
+        or (right == "island2" and s[1] != "myCaptured")
+        or (right == "island3" and s[2] != "myCaptured")
+    ):
+        s = right[-1] ##+ str(x + 1) + "," + str(y)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 2
+
+    if (
+        (nw == "island1" and s[0] != "myCaptured")
+        or (nw == "island2" and s[1] != "myCaptured")
+        or (nw == "island3" and s[2] != "myCaptured")
+    ):
+        s = nw[-1] ##+ str(x - 1) + "," + str(y-1)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 1
+
+    if (
+        (ne == "island1" and s[0] != "myCaptured")
+        or (ne == "island2" and s[1] != "myCaptured")
+        or (ne == "island3" and s[2] != "myCaptured")
+    ):
+        s = ne[-1] ##+ str(x + 1) + "," + str(y-1)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 1
+
+    if (
+        (sw == "island1" and s[0] != "myCaptured")
+        or (sw == "island2" and s[1] != "myCaptured")
+        or (sw == "island3" and s[2] != "myCaptured")
+    ):
+        s = sw[-1] ##+ str(x - 1) + "," + str(y+1)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 3
+
+    if (
+        (se == "island1" and s[0] != "myCaptured")
+        or (se == "island2" and s[1] != "myCaptured")
+        or (se == "island3" and s[2] != "myCaptured")
+    ):
+        s = se[-1] ##+ str(x + 1) + "," + str(y+1)
+        if pirate.getTeamSignal() == "":
+            prev_s = ""
+        else:
+            prev_s = pirate.getTeamSignal()+";"
+        pirate.setTeamSignal(prev_s+s)
+        return 3
+    
+    if int(pirate.getID())>8:
+        return central_pirates(pirate)
+
+    # if pirate.getTeamSignal() != "":
+    #     s = pirate.getTeamSignal()
+    #     l = s.split(",")
+    #     x = int(l[0][1:])
+    #     y = int(l[1])
+
+    #     if pirate.getCurrentFrame() >= 1000:
+    #         return moveTo(x, y, pirate)
+    #     else:
+    #         return random.randint(1,4)
 
     else:
-        return central_pirates(pirate)
+        return roam(pirate)
 
 
 def ActTeam(team):
     l = team.trackPlayers()
     s = team.getTeamSignal()
-    print(team.getCurrentFrame())
-    if team.getCurrentFrame() > 4*team.getDimensionX(): 
-        team.buildWalls(1)
-        team.buildWalls(2)
-        team.buildWalls(3)
+    if team.getCurrentFrame() == 1:
+        team.setTeamSignal(",,;,,;,,")
+    team.buildWalls(1)
+    team.buildWalls(2)
+    team.buildWalls(3)
     # print(team.getTeamSignal())
     # print(team.trackPlayers())
-    if s:
-        island_no = int(s[0])
-        signal = l[island_no - 1]
-        if signal == "myCaptured":
-            team.setTeamSignal("")
+    # if s:
+    #     ####split using pipe and then split using semi-colon
+    #     island_no = int(s[0])
+    #     signal = l[island_no - 1]
+    #     if signal == "myCaptured":
+    #         team.setTeamSignal("")

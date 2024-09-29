@@ -1,207 +1,48 @@
 import random
 import math
 
-name = "script"
+name = "avi_v3"
+
+def moveTo(x, y, Pirate):
+    position = Pirate.getPosition()
+    if position[0] == x and position[1] == y:
+        return 0
+    if position[0] == x:
+        return (position[1] < y) * 2 + 1
+    if position[1] == y:
+        return (position[0] > x) * 2 + 2
+    if random.randint(1, 2) == 1:
+        return (position[0] > x) * 2 + 2
+    else:
+        return (position[1] < y) * 2 + 1
 
 def central_pirates(pirate):
-    dimension_x = pirate.getDimensionX()
-    dimension_y = pirate.getDimensionY()
-
+    # print(pirate.getSignal())
+    pos = ["0","1","2","3"]
+    coords = [(0,0),(pirate.getDimensionX()-1,0),(pirate.getDimensionX()-1,pirate.getDimensionY()-1),(0,pirate.getDimensionY()-1)]
     if pirate.getPosition() == pirate.getDeployPoint():
-        sig = "centre"
-        pirate.setSignal(sig)
-        return moveTo(dimension_x // 2, dimension_y // 2, pirate)
-
-    if pirate.getPosition() == (dimension_x // 2, dimension_y // 2):
-        x = random.randint(1, 12)
-        if x == 1:
-            pirate.setSignal("top-left")
-        elif x == 2:
-            pirate.setSignal("bottom-left")
-        elif x == 3:
-            pirate.setSignal("top-right")
-        elif x == 4:
-            pirate.setSignal("bottom-right")
-        elif x == 5:
-            pirate.setSignal("top1")
-        elif x == 6:
-            pirate.setSignal("top2")
-        elif x == 7:
-            pirate.setSignal("right1")
-        elif x == 8:
-            pirate.setSignal("right2")
-        elif x == 9:
-            pirate.setSignal("bottom1")
-        elif x == 10:
-            pirate.setSignal("bottom2")
-        elif x == 11:
-            pirate.setSignal("left1")
+            pirate.setSignal("centre")
+            return moveTo(pirate.getDimensionX()/2,pirate.getDimensionY()/2, pirate)
+    if pirate.getPosition() == (pirate.getDimensionX()/2,pirate.getDimensionY()/2):
+        if random.randint(1, 4) == 1:
+            pirate.setSignal(pos[0])
+        elif random.randint(1,4)==2:
+            pirate.setSignal(pos[1])
+        elif random.randint(1,4)==3:
+            pirate.setSignal(pos[2])
         else:
-            pirate.setSignal("left2")
-
+            pirate.setSignal(pos[3])
+    
+    if pirate.getSignal() != "centre":
+        if pirate.getPosition() == coords[int(pirate.getSignal())]:
+            if random.randint(1,2)==1:
+                pirate.setSignal(pos[((int(pirate.getSignal()))+1)%4])
+            else:
+                pirate.setSignal("centre")
     if pirate.getSignal() == "centre":
-        return moveTo(dimension_x // 2, dimension_y // 2, pirate)
-    elif pirate.getSignal() == "top-left": #1
-        if pirate.getPosition() == (0, 0):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, 0, pirate)
-    elif pirate.getSignal() == "bottom-right": #2
-        if pirate.getPosition() == (dimension_x - 1, dimension_y - 1):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x - 1, dimension_y - 1, pirate)
-    elif pirate.getSignal() == "top-right": #3
-        if pirate.getPosition() == (dimension_x - 1, 0):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x - 1, 0, pirate)
-    elif pirate.getSignal() == "bottom-left": #4
-        if pirate.getPosition() == (0, dimension_y - 1):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, dimension_y - 1, pirate)
-    elif pirate.getSignal() == "top1": #5
-        if pirate.getPosition() == (dimension_x // 3, 0):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x // 3, 0, pirate)
-    elif pirate.getSignal() == "top2": #6
-        if pirate.getPosition() == (2*dimension_x //3, 0):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(2*dimension_x // 3, 0, pirate)
-    elif pirate.getSignal() == "right1": #7
-        if pirate.getPosition() == (dimension_x-1, dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x-1, dimension_y // 3, pirate)
-    elif pirate.getSignal() == "right2": #8
-        if pirate.getPosition() == (dimension_x-1, 2*dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x-1, 2*dimension_y // 3, pirate)
-    elif pirate.getSignal() == "bottom1": #9
-        if pirate.getPosition() == (2*dimension_x // 3, dimension_y-1):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(2*dimension_x // 3, dimension_y-1, pirate)
-    elif pirate.getSignal() == "bottom2": #10
-        if pirate.getPosition() == (dimension_x // 3, dimension_y-1):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(dimension_x // 3, dimension_y-1, pirate)
-    elif pirate.getSignal() == "left1": #11
-        if pirate.getPosition() == (0, 2*dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, 2*dimension_y // 3, pirate)
-    elif pirate.getSignal() == "left2": #12
-        if pirate.getPosition() == (0, dimension_y // 3):
-            pirate.setSignal("centre")
-            return moveTo(0, 0, pirate)
-        return moveTo(0, dimension_y // 3, pirate)
-    else:
-        pirate.setSignal("centre")
-        return random.randint(1, 4)
+        return moveTo(pirate.getDimensionX()/2,pirate.getDimensionY()/2, pirate)
 
-
-def updown(pirate):
-
-    wall_up = pirate.investigate_up()[0]
-    wall_down = pirate.investigate_down()[0]
-    wall_left = pirate.investigate_left()[0]
-    wall_right = pirate.investigate_right()[0]
-
-
-    if wall_up == "wall":
-        pirate.setSignal("down")
-    if wall_down == "wall":
-        pirate.setSignal("up")
-    if wall_left == "wall":
-        pirate.setSignal("right")
-    if wall_right == "wall":
-        pirate.setSignal("left")
-
-    if pirate.getSignal() == "up":
-        return 1
-    if pirate.getSignal() == "down":
-        return 3
-    if pirate.getSignal() == "left":
-        return 4
-    if pirate.getSignal() == "right":
-        return 2
-
-def initial_pirates(pirate,lines):
-    x = pirate.getDimensionX()
-    y = pirate.getDimensionY()
-
-    if pirate.getPosition()==pirate.getDeployPoint():
-        if pirate.getDeployPoint() == (0,0):
-            pirate.setSignal("top-left")
-        if pirate.getDeployPoint() == (pirate.getDimensionX()-1,pirate.getDimensionY()-1):
-            pirate.setSignal("bottom-right")
-        if pirate.getDeployPoint() == (pirate.getDimensionX()-1,0):
-            pirate.setSignal("top-right")
-        if pirate.getDeployPoint() == (0,pirate.getDimensionY()-1):
-            pirate.setSignal("bottom-left")
-
-    id = int(pirate.getID())
-    if pirate.getSignal()=="top-right":
-        if id<8+lines:
-            if pirate.getPosition()==(x-(id-4), 0):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-(id-4), 0, pirate)
-        else:
-            if pirate.getPosition()==(x-1, id-4-lines):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-1, id-4-lines, pirate)
-    if pirate.getSignal()=="bottom-right":
-        if id<8+lines:
-            if pirate.getPosition()==(x-(id-4), y-1):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-(id-4), y-1, pirate)
-        else:
-            if pirate.getPosition()==(x-1, y-(id-4)+lines):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(x-1, y-(id-4)+lines, pirate)
-    if pirate.getSignal()=="top-left":
-        if id<8+lines:
-            if pirate.getPosition()==(id-4,0):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(id-4, 0, pirate)
-        else:
-            if pirate.getPosition()==(0, id-4-lines):
-                pirate.setSignal("updown")    
-                return updown(pirate)
-            else:
-                return moveTo(0, id-4-lines, pirate)
-    if pirate.getSignal()=="bottom-left":
-        if id<8+lines:
-            if pirate.getPosition()==(id-5, y-1):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(id-5, y-1, pirate)
-        else:
-            if pirate.getPosition()==(0,y-(id-4)+lines):
-                pirate.setSignal("updown")
-                return updown(pirate)
-            else:
-                return moveTo(0, y-(id-4)+lines, pirate)
-    if pirate.getSignal()=="updown" or "up" or "down" or "left" or "right":
-        return updown(pirate)
-
+    return moveTo(coords[int(pirate.getSignal())][0],coords[int(pirate.getSignal())][1], pirate)
 
 
 def roam_island(pirate):
@@ -564,21 +405,7 @@ def roam(pirate):
                 case _:
                     return random.randint(1, 4)
     else:
-        return central_pirates(pirate)
-
-
-def moveTo(x, y, Pirate):
-    position = Pirate.getPosition()
-    if position[0] == x and position[1] == y:
-        return 0
-    if position[0] == x:
-        return (position[1] < y) * 2 + 1
-    if position[1] == y:
-        return (position[0] > x) * 2 + 2
-    if random.randint(1, 2) == 1:
-        return (position[0] > x) * 2 + 2
-    else:
-        return (position[1] < y) * 2 + 1
+        return random.randint(1, 4)
 
 
 def ActPirate(pirate):
@@ -595,18 +422,12 @@ def ActPirate(pirate):
     s = pirate.trackPlayers()
     sigT = pirate.getTeamSignal()
 
+
     if int(pirate.getID()) < 9:
         return roam(pirate)
     
-    lines = pirate.getDimensionY()-4
+    if pirate.getCurrentFrame() >= 200:
 
-    if int(pirate.getID()) < 8 + 2*lines and pirate.getCurrentFrame() < pirate.getDimensionX() * 6:
-        return initial_pirates(pirate,lines)
-    
-    # if pirate.getCurrentFrame() >= pirate.getDimensionX() * 10 and int(pirate.getID()) < 8 + lines:
-    #     return initial_pirates(pirate,lines//2)
-
-    if pirate.getCurrentFrame() >= pirate.getDimensionX() * 5:
 
         if (
             (curr == "island1" and s[0] != "myCaptured")
@@ -617,6 +438,7 @@ def ActPirate(pirate):
             pirate.setTeamSignal(s)
             return roam_island(pirate)
         
+
 
         if (
             (up == "island1" and s[0] != "myCaptured")
@@ -696,23 +518,22 @@ def ActPirate(pirate):
         x = int(l[0][1:])
         y = int(l[1])
 
-        if pirate.getCurrentFrame() >= 500:
-            return moveTo(x, y, pirate)
-        else:
-            return central_pirates(pirate)
+        return moveTo(x, y, pirate)
 
     else:
-        return central_pirates(pirate)
+        if pirate.getCurrentFrame()<=500:
+            return central_pirates(pirate)
+        else:
+            return random.randint(1, 4)
 
 
 def ActTeam(team):
     l = team.trackPlayers()
     s = team.getTeamSignal()
-    print(team.getCurrentFrame())
-    if team.getCurrentFrame() > 4*team.getDimensionX(): 
-        team.buildWalls(1)
-        team.buildWalls(2)
-        team.buildWalls(3)
+
+    team.buildWalls(1)
+    team.buildWalls(2)
+    team.buildWalls(3)
     # print(team.getTeamSignal())
     # print(team.trackPlayers())
     if s:
